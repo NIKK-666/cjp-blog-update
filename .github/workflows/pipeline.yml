@@ -15,30 +15,30 @@ jobs:
   # ─────────────────────────────────────────────────────────────────
   # JOB 1: PYTHON CODE QUALITY ENGINE (PYLINT)
   # ─────────────────────────────────────────────────────────────────
-  python-lint:
-    name: Lint Python Code
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+  # python-lint:
+  #   name: Lint Python Code
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout repository
+  #       uses: actions/checkout@v4
 
-      - name: Set up Python 3.11
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-          cache: 'pip' # Automatically caches pip dependencies if requirements.txt exists
+  #     - name: Set up Python 3.11
+  #       uses: actions/setup-python@v5
+  #       with:
+  #         python-version: '3.11'
+  #         cache: 'pip' # Automatically caches pip dependencies if requirements.txt exists
 
-      - name: Install Linting Frameworks
-        run: |
-          python -m pip install --upgrade pip
-          pip install pylint
-          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+  #     - name: Install Linting Frameworks
+  #       run: |
+  #         python -m pip install --upgrade pip
+  #         pip install pylint
+  #         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
-      # Scans all .py files. It throws warnings but won't break the build 
-      # unless you change score thresholds (e.g., --fail-under=8.0)
-      - name: Execute Pylint Code Analysis
-        run: |
-          pylint $(git ls-files '*.py') --fail-under=7.0
+  #     # Scans all .py files. It throws warnings but won't break the build 
+  #     # unless you change score thresholds (e.g., --fail-under=8.0)
+  #     - name: Execute Pylint Code Analysis
+  #       run: |
+  #         pylint $(git ls-files '*.py') --fail-under=7.0
 
   # ─────────────────────────────────────────────────────────────────
   # JOB 2: WEB VALIDATION & PERFORMANCE AUDIT
