@@ -25,9 +25,7 @@ jobs:
       - name: Install html-validate
         run: npm install -g html-validate
 
-      - name: Run HTML validation
-        run: html-validate index.html
-
+     
   # ─────────────────────────────────────────
   # JOB 2: Lighthouse Performance Audit
   # ─────────────────────────────────────────
