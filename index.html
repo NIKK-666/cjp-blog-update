@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cockroach Janta Party — Voice of the Lazy & Unemployed</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0a0a08;
+      --surface: #111110;
+      --card: #181816;
+      --cockroach: #c8f000;
+      --cockroach-dim: #8aaa00;
+      --red: #ff3b2f;
+      --amber: #ffb800;
+      --white: #f2f0e8;
+      --muted: #7a7869;
+      --border: #2a2a26;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--white);
+      font-family: 'Space Mono', monospace;
+      font-size: 15px;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* ── NOISE OVERLAY ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.4;
+    }
+
+    /* ── SCROLLBAR ── */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--cockroach); border-radius: 3px; }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      position: relative;
+      overflow: hidden;
+      border-bottom: 2px solid var(--cockroach);
+    }
+
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 70% 40%, rgba(200,240,0,0.07) 0%, transparent 60%),
+        radial-gradient(ellipse 40% 40% at 20% 80%, rgba(255,59,47,0.06) 0%, transparent 50%);
+    }
+
+    /* Animated cockroach grid lines */
+    .hero-bg::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(200,240,0,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(200,240,0,0.04) 1px, transparent 1px);
+      background-size: 60px 60px;
+      animation: gridshift 20s linear infinite;
+    }
+
+    @keyframes gridshift {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(60px); }
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.5rem 3rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.4rem;
+      color: var(--cockroach);
+      letter-spacing: 0.1em;
+      text-decoration: none;
+    }
+
+    .nav-badge {
+      background: var(--red);
+      color: #fff;
+      font-size: 0.65rem;
+      font-weight: 700;
+      padding: 0.25rem 0.6rem;
+      border-radius: 2px;
+      letter-spacing: 0.1em;
+      animation: pulse-badge 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse-badge {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.6; }
+    }
+
+    /* ── HERO CONTENT ── */
+    .hero-content {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 4rem 3rem;
+      max-width: 900px;
+    }
+
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.72rem;
+      letter-spacing: 0.2em;
+      color: var(--cockroach);
+      text-transform: uppercase;
+      margin-bottom: 2rem;
+      border: 1px solid var(--cockroach);
+      padding: 0.4rem 0.9rem;
+    }
+
+    .hero-eyebrow .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--cockroach);
+      animation: blink 1s step-end infinite;
+    }
+
+    @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+    .hero-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(3.5rem, 10vw, 8rem);
+      line-height: 0.9;
+      color: var(--white);
+      margin-bottom: 1.5rem;
+      letter-spacing: 0.02em;
+    }
+
+    .hero-title .accent {
+      color: var(--cockroach);
+      display: block;
+    }
+
+    .hero-subtitle {
+      font-family: 'DM Serif Display', serif;
+      font-style: italic;
+      font-size: clamp(1rem, 2.5vw, 1.5rem);
+      color: var(--muted);
+      margin-bottom: 2.5rem;
+      max-width: 560px;
+    }
+
+    .hero-stats {
+      display: flex;
+      gap: 2.5rem;
+      margin-bottom: 3rem;
+    }
+
+    .stat {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .stat-num {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2rem;
+      color: var(--cockroach);
+      line-height: 1;
+    }
+
+    .stat-label {
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+
+    .hero-footer {
+      position: relative;
+      z-index: 10;
+      padding: 1.5rem 3rem;
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      border-top: 1px solid var(--border);
+      display: flex;
+      gap: 2rem;
+    }
+
+    .big-roach {
+      position: absolute;
+      right: -2rem;
+      bottom: -2rem;
+      font-size: clamp(10rem, 25vw, 22rem);
+      opacity: 0.05;
+      transform: rotate(-20deg);
+      pointer-events: none;
+      z-index: 1;
+      filter: grayscale(1);
+      animation: roach-float 8s ease-in-out infinite;
+    }
+
+    @keyframes roach-float {
+      0%, 100% { transform: rotate(-20deg) translateY(0); }
+      50% { transform: rotate(-18deg) translateY(-20px); }
+    }
+
+    /* ── SECTIONS ── */
+    section { padding: 5rem 3rem; border-bottom: 1px solid var(--border); }
+    .container { max-width: 1100px; margin: 0 auto; }
+
+    .section-label {
+      font-size: 0.68rem;
+      letter-spacing: 0.3em;
+      color: var(--cockroach);
+      text-transform: uppercase;
+      margin-bottom: 0.8rem;
+    }
+
+    .section-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      line-height: 1;
+      margin-bottom: 3rem;
+      color: var(--white);
+    }
+
+    /* ── ORIGIN SECTION ── */
+    .origin-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: start;
+    }
+
+    .origin-text p {
+      color: #c8c6b8;
+      margin-bottom: 1.2rem;
+    }
+
+    .quote-block {
+      border-left: 3px solid var(--red);
+      padding: 1.5rem 1.5rem 1.5rem 2rem;
+      background: rgba(255,59,47,0.05);
+      margin: 2rem 0;
+    }
+
+    .quote-block blockquote {
+      font-family: 'DM Serif Display', serif;
+      font-style: italic;
+      font-size: 1.2rem;
+      color: var(--white);
+      margin-bottom: 0.8rem;
+    }
+
+    .quote-attribution {
+      font-size: 0.72rem;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+    }
+
+    .timeline {
+      position: relative;
+      padding-left: 2rem;
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: linear-gradient(to bottom, var(--cockroach), var(--border));
+    }
+
+    .timeline-item {
+      position: relative;
+      margin-bottom: 2rem;
+    }
+
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: -2.4rem;
+      top: 0.4rem;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--cockroach);
+      border: 2px solid var(--bg);
+    }
+
+    .timeline-date {
+      font-size: 0.68rem;
+      color: var(--cockroach);
+      letter-spacing: 0.12em;
+      margin-bottom: 0.3rem;
+    }
+
+    .timeline-text {
+      color: #c8c6b8;
+      font-size: 0.9rem;
+    }
+
+    /* ── DEMANDS ── */
+    .demands-section { background: var(--surface); }
+
+    .demands-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .demand-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      padding: 2rem;
+      position: relative;
+      transition: border-color 0.3s, transform 0.3s;
+      overflow: hidden;
+    }
+
+    .demand-card:hover {
+      border-color: var(--cockroach);
+      transform: translateY(-3px);
+    }
+
+    .demand-card::before {
+      content: attr(data-num);
+      position: absolute;
+      top: -0.5rem;
+      right: 1rem;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 5rem;
+      color: rgba(200,240,0,0.06);
+      line-height: 1;
+      pointer-events: none;
+    }
+
+    .demand-icon {
+      font-size: 1.8rem;
+      margin-bottom: 1rem;
+    }
+
+    .demand-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.3rem;
+      color: var(--cockroach);
+      letter-spacing: 0.05em;
+      margin-bottom: 0.8rem;
+    }
+
+    .demand-desc {
+      font-size: 0.88rem;
+      color: #a8a698;
+      line-height: 1.65;
+    }
+
+    /* ── CRACKDOWN ── */
+    .crackdown-section {
+      background: repeating-linear-gradient(
+        -45deg,
+        var(--bg),
+        var(--bg) 12px,
+        rgba(255,59,47,0.025) 12px,
+        rgba(255,59,47,0.025) 24px
+      );
+    }
+
+    .crackdown-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+    }
+
+    .event-list { list-style: none; }
+
+    .event-list li {
+      display: flex;
+      gap: 1rem;
+      padding: 1.2rem 0;
+      border-bottom: 1px solid var(--border);
+      align-items: flex-start;
+    }
+
+    .event-list li:last-child { border-bottom: none; }
+
+    .event-date {
+      font-size: 0.68rem;
+      color: var(--red);
+      letter-spacing: 0.1em;
+      white-space: nowrap;
+      margin-top: 0.2rem;
+      min-width: 80px;
+    }
+
+    .event-text {
+      font-size: 0.88rem;
+      color: #c8c6b8;
+    }
+
+    .status-box {
+      background: var(--card);
+      border: 1px solid var(--red);
+      padding: 2rem;
+    }
+
+    .status-box h3 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.5rem;
+      color: var(--red);
+      margin-bottom: 1rem;
+    }
+
+    .status-item {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      padding: 0.8rem 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.85rem;
+      color: #c8c6b8;
+    }
+
+    .status-item:last-child { border-bottom: none; }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .status-dot.red { background: var(--red); }
+    .status-dot.amber { background: var(--amber); }
+    .status-dot.green { background: var(--cockroach); }
+
+    /* ── REACTION ── */
+    .reaction-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .reaction-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      padding: 2rem;
+      transition: border-color 0.3s;
+    }
+
+    .reaction-card:hover { border-color: var(--cockroach-dim); }
+
+    .reaction-card .tag {
+      display: inline-block;
+      font-size: 0.62rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      padding: 0.25rem 0.6rem;
+      border-radius: 2px;
+      margin-bottom: 1rem;
+    }
+
+    .tag-support { background: rgba(200,240,0,0.15); color: var(--cockroach); }
+    .tag-oppose { background: rgba(255,59,47,0.15); color: var(--red); }
+    .tag-neutral { background: rgba(255,184,0,0.15); color: var(--amber); }
+
+    .reaction-card blockquote {
+      font-family: 'DM Serif Display', serif;
+      font-style: italic;
+      color: var(--white);
+      margin-bottom: 1rem;
+      font-size: 1.05rem;
+      line-height: 1.5;
+    }
+
+    .reaction-card .name {
+      font-size: 0.75rem;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+    }
+
+    /* ── WHY IT MATTERS ── */
+    .why-section {
+      background: var(--surface);
+    }
+
+    .why-lead {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(1.3rem, 3vw, 2rem);
+      font-style: italic;
+      color: var(--white);
+      max-width: 780px;
+      margin-bottom: 3rem;
+      line-height: 1.5;
+    }
+
+    .why-lead .highlight {
+      color: var(--cockroach);
+      font-style: normal;
+    }
+
+    .why-columns {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 2rem;
+    }
+
+    .why-col h3 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.2rem;
+      color: var(--cockroach);
+      margin-bottom: 0.8rem;
+      letter-spacing: 0.05em;
+    }
+
+    .why-col p {
+      font-size: 0.88rem;
+      color: #a8a698;
+      line-height: 1.65;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      padding: 3rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    footer .logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.2rem;
+      color: var(--cockroach);
+      letter-spacing: 0.1em;
+    }
+
+    footer p {
+      font-size: 0.72rem;
+      color: var(--muted);
+    }
+
+    /* ── MARQUEE ── */
+    .marquee-wrap {
+      overflow: hidden;
+      background: var(--cockroach);
+      padding: 0.6rem 0;
+    }
+
+    .marquee-inner {
+      display: flex;
+      gap: 3rem;
+      animation: marquee 20s linear infinite;
+      white-space: nowrap;
+    }
+
+    .marquee-item {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1rem;
+      color: var(--bg);
+      letter-spacing: 0.15em;
+      flex-shrink: 0;
+    }
+
+    @keyframes marquee {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      nav { padding: 1rem 1.5rem; }
+      section { padding: 3rem 1.5rem; }
+      .hero-content { padding: 3rem 1.5rem; }
+      .hero-footer { padding: 1rem 1.5rem; flex-wrap: wrap; gap: 1rem; }
+      .origin-grid,
+      .crackdown-grid,
+      .why-columns { grid-template-columns: 1fr; gap: 2rem; }
+      footer { padding: 2rem 1.5rem; }
+    }
+
+    /* ── ANIMATIONS ── */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .fade-up.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── MARQUEE ── -->
+<div class="marquee-wrap">
+  <div class="marquee-inner">
+    <span class="marquee-item">🪳 COCKROACH JANTA PARTY</span>
+    <span class="marquee-item">★ VOICE OF THE LAZY & UNEMPLOYED</span>
+    <span class="marquee-item">🪳 YOU CANNOT SQUASH A MOVEMENT</span>
+    <span class="marquee-item">★ EST. 16 MAY 2026</span>
+    <span class="marquee-item">🪳 SECULAR · SOCIALIST · DEMOCRATIC · LAZY</span>
+    <span class="marquee-item">★ 20M+ FOLLOWERS IN ONE WEEK</span>
+    <span class="marquee-item">🪳 COCKROACH JANTA PARTY</span>
+    <span class="marquee-item">★ VOICE OF THE LAZY & UNEMPLOYED</span>
+    <span class="marquee-item">🪳 YOU CANNOT SQUASH A MOVEMENT</span>
+    <span class="marquee-item">★ EST. 16 MAY 2026</span>
+    <span class="marquee-item">🪳 SECULAR · SOCIALIST · DEMOCRATIC · LAZY</span>
+    <span class="marquee-item">★ 20M+ FOLLOWERS IN ONE WEEK</span>
+  </div>
+</div>
+
+<!-- ── HERO ── -->
+<header class="hero">
+  <div class="hero-bg"></div>
+
+  <nav>
+    <a href="#" class="nav-logo">🪳 CJP BLOG</a>
+    <span class="nav-badge">LIVE MOVEMENT</span>
+  </nav>
+
+  <div class="hero-content">
+    <div class="hero-eyebrow">
+      <span class="dot"></span>
+      Breaking · India · May 2026
+    </div>
+
+    <h1 class="hero-title">
+      COCKROACH
+      <span class="accent">JANTA PARTY</span>
+    </h1>
+
+    <p class="hero-subtitle">
+      How a judge's slur turned into India's most viral youth uprising — and why the government can't seem to squash it.
+    </p>
+
+    <div class="hero-stats">
+      <div class="stat">
+        <span class="stat-num">20M+</span>
+        <span class="stat-label">Instagram followers</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num">10L+</span>
+        <span class="stat-label">Members signed up</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num">8</span>
+        <span class="stat-label">Days old</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-footer">
+    <span>BY ABHIJEET DIPKE · FOUNDED MAY 16, 2026</span>
+    <span>INDIA'S MOST VIRAL POLITICAL MOVEMENT</span>
+  </div>
+
+  <div class="big-roach">🪳</div>
+</header>
+
+<!-- ── ORIGIN ── -->
+<section id="origin">
+  <div class="container">
+    <p class="section-label">Origin Story</p>
+    <h2 class="section-title">THE SLUR THAT STARTED A REVOLUTION</h2>
+
+    <div class="origin-grid fade-up">
+      <div class="origin-text">
+        <p>On May 15, 2026, inside a Supreme Court chamber, Chief Justice of India Surya Kant made remarks that would ignite the biggest youth protest movement India had seen in years. During an open court hearing, he compared unemployed young Indians to "cockroaches" and "parasites of society."</p>
+
+        <div class="quote-block">
+          <blockquote>"There are youngsters like cockroaches, they don't get any employment, they don't have any place in profession. Some of them become media, some of them become social media, RTI activists and other activists, and they start attacking everyone."</blockquote>
+          <p class="quote-attribution">— Chief Justice Surya Kant, Supreme Court of India, May 15, 2026</p>
+        </div>
+
+        <p>Kant later issued a clarification, insisting his words were misquoted and that he was specifically referring to people who entered the legal profession using fake degrees — not India's youth at large. But the damage was done. The word "cockroach" had already landed.</p>
+
+        <p>Within hours, Abhijeet Dipke — a 30-year-old political communications strategist and Boston University student who had once worked with the Aam Aadmi Party — posted a question on social media: <em>"What if all cockroaches come together?"</em></p>
+
+        <p>That single line would become the founding spark of the Cockroach Janta Party.</p>
+      </div>
+
+      <div class="timeline">
+        <div class="timeline-item">
+          <p class="timeline-date">MAY 15, 2026</p>
+          <p class="timeline-text">Chief Justice Surya Kant makes the "cockroach" remark during a Supreme Court hearing. Social media erupts.</p>
+        </div>
+        <div class="timeline-item">
+          <p class="timeline-date">MAY 16, 2026</p>
+          <p class="timeline-text">Abhijeet Dipke launches the Cockroach Janta Party website and Instagram account. 3.5 lakh sign up in 72 hours.</p>
+        </div>
+        <div class="timeline-item">
+          <p class="timeline-date">MAY 17–19, 2026</p>
+          <p class="timeline-text">Instagram following surpasses 11 million. Offline protests begin; volunteers hold clean-up drives in cockroach costumes.</p>
+        </div>
+        <div class="timeline-item">
+          <p class="timeline-date">MAY 20, 2026</p>
+          <p class="timeline-text">Instagram following reaches 19M — nearly double that of the ruling BJP. CJP outstrips most mainstream political parties online.</p>
+        </div>
+        <div class="timeline-item">
+          <p class="timeline-date">MAY 21, 2026</p>
+          <p class="timeline-text">MeitY orders the official X (Twitter) account blocked. The CJP website cockroachjanataparty.org is taken down citing "national security."</p>
+        </div>
+        <div class="timeline-item">
+          <p class="timeline-date">MAY 23, 2026</p>
+          <p class="timeline-text">Instagram account reported hacked, backup X handle removed. Dipke alleges death threats and a coordinated crackdown.</p>
+        </div>
+        <div class="timeline-item">
+          <p class="timeline-date">MAY 24, 2026</p>
+          <p class="timeline-text">Movement continues under new handles. 5.68 lakh sign petition demanding resignation of Education Minister Dharmendra Pradhan.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── DEMANDS ── -->
+<section id="demands" class="demands-section">
+  <div class="container">
+    <p class="section-label">The Manifesto</p>
+    <h2 class="section-title">5 DEMANDS. ZERO SPONSORS.</h2>
+
+    <div class="demands-grid fade-up">
+      <div class="demand-card" data-num="01">
+        <div class="demand-icon">📋</div>
+        <h3 class="demand-title">RTI Transparency</h3>
+        <p class="demand-desc">Absolute transparency and full answerability under the Right to Information Act. Every public office must be accountable to citizens, not shielded by bureaucratic walls.</p>
+      </div>
+
+      <div class="demand-card" data-num="02">
+        <div class="demand-icon">🚫</div>
+        <h3 class="demand-title">Ban Electoral Bonds</h3>
+        <p class="demand-desc">A strict ban on anonymous political donations and electoral bonds. Voters deserve to know who funds their leaders and what hidden agendas come with that money.</p>
+      </div>
+
+      <div class="demand-card" data-num="03">
+        <div class="demand-icon">💼</div>
+        <h3 class="demand-title">Right to Employment</h3>
+        <p class="demand-desc">Creation of a Right to Employment law that guarantees either a job or an unemployment allowance for every Indian citizen between the ages of 21 and 60.</p>
+      </div>
+
+      <div class="demand-card" data-num="04">
+        <div class="demand-icon">🎓</div>
+        <h3 class="demand-title">NEET Accountability</h3>
+        <p class="demand-desc">Full accountability for the NEET paper leak scandal of 2024. Demand for the resignation of Union Education Minister Dharmendra Pradhan, with structural reforms to prevent exam fraud.</p>
+      </div>
+
+      <div class="demand-card" data-num="05">
+        <div class="demand-icon">⚖️</div>
+        <h3 class="demand-title">Judicial Integrity</h3>
+        <p class="demand-desc">End to judicial corruption and post-retirement rewards for judges who serve political interests. The Supreme Court must be independent, impartial, and answerable to the people.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CRACKDOWN ── -->
+<section id="crackdown" class="crackdown-section">
+  <div class="container">
+    <p class="section-label">Government Response</p>
+    <h2 class="section-title">THE CRACKDOWN CHRONICLES</h2>
+
+    <div class="crackdown-grid fade-up">
+      <div>
+        <p style="color:#a8a698; margin-bottom:2rem; font-size:0.9rem;">What began as a meme-powered online movement quickly alarmed the government. Within days, authorities launched a sweeping digital enforcement action. Dipke himself called it "dictatorial behaviour," asking: <em style="color:var(--white)">"Why is the government so scared of cockroaches?"</em></p>
+
+        <ul class="event-list">
+          <li>
+            <span class="event-date">MAY 21</span>
+            <p class="event-text">Ministry of Electronics and IT (MeitY) orders X to block CJP's original account in India, citing national security concerns.</p>
+          </li>
+          <li>
+            <span class="event-date">MAY 21</span>
+            <p class="event-text">Official CJP website cockroachjanataparty.org taken down by government directive. Over 10 lakh member sign-ups are lost.</p>
+          </li>
+          <li>
+            <span class="event-date">MAY 22</span>
+            <p class="event-text">Backup X account "Cockroach is Back" also suspended. Dipke alleges death threats are received by the team.</p>
+          </li>
+          <li>
+            <span class="event-date">MAY 23</span>
+            <p class="event-text">Official Instagram account reportedly hacked. Dipke's personal Instagram also compromised. Team loses access to all platforms.</p>
+          </li>
+          <li>
+            <span class="event-date">MAY 23</span>
+            <p class="event-text">Dipke posts: "Our only crime is we were demanding a better future for ourselves. Cockroaches never die."</p>
+          </li>
+        </ul>
+      </div>
+
+      <div>
+        <div class="status-box">
+          <h3>🔴 CURRENT PLATFORM STATUS</h3>
+
+          <div class="status-item">
+            <span class="status-dot red"></span>
+            X (Twitter) — Original account BLOCKED in India
+          </div>
+          <div class="status-item">
+            <span class="status-dot red"></span>
+            X Backup Account — SUSPENDED
+          </div>
+          <div class="status-item">
+            <span class="status-dot red"></span>
+            Official Instagram — HACKED / INACCESSIBLE
+          </div>
+          <div class="status-item">
+            <span class="status-dot red"></span>
+            Official Website — TAKEN DOWN by MeitY
+          </div>
+          <div class="status-item">
+            <span class="status-dot amber"></span>
+            Founder's Personal IG — Reportedly compromised
+          </div>
+          <div class="status-item">
+            <span class="status-dot green"></span>
+            Movement — ALIVE on alternate channels
+          </div>
+
+          <div style="margin-top:1.5rem; padding-top:1.5rem; border-top:1px solid var(--border); font-size:0.8rem; color:var(--muted);">
+            "404 Democracy Not Found" — viral phrase coined by supporters after the website was blocked.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── REACTIONS ── -->
+<section id="reactions">
+  <div class="container">
+    <p class="section-label">Voices</p>
+    <h2 class="section-title">WHAT INDIA IS SAYING</h2>
+
+    <div class="reaction-cards fade-up">
+      <div class="reaction-card">
+        <span class="tag tag-support">SUPPORT</span>
+        <blockquote>"The CJP is a revelation of youth frustration. Blocking it is disastrous for democracy. Satirical outlets are healthy for expressing public dissatisfaction."</blockquote>
+        <p class="name">— SHASHI THAROOR, Congress MP</p>
+      </div>
+
+      <div class="reaction-card">
+        <span class="tag tag-support">SUPPORT</span>
+        <blockquote>"Chief Justice Kant's comments reflected deep-rooted prejudice and antipathy towards activists and youth in general."</blockquote>
+        <p class="name">— PRASHANT BHUSHAN, Activist-Lawyer</p>
+      </div>
+
+      <div class="reaction-card">
+        <span class="tag tag-support">CITIZEN VOICE</span>
+        <blockquote>"In the last decade, there has been a lot of fear in the country. The Cockroach Janta Party is like a breath of fresh air. Cockroaches are resilient — they survive."</blockquote>
+        <p class="name">— ASHISH JOSHI, Retired Bureaucrat</p>
+      </div>
+
+      <div class="reaction-card">
+        <span class="tag tag-support">GEN Z</span>
+        <blockquote>"I believe it started as satire, but I really like the direction it's going. The youth need a platform where we can put up our actual demands."</blockquote>
+        <p class="name">— SRISTHI, Student, New Delhi</p>
+      </div>
+
+      <div class="reaction-card">
+        <span class="tag tag-neutral">CONTEXT</span>
+        <blockquote>"South Asia has been the ground zero of historic Gen Z protests that have toppled governments in Sri Lanka, Nepal and Bangladesh."</blockquote>
+        <p class="name">— AL JAZEERA REPORT</p>
+      </div>
+
+      <div class="reaction-card">
+        <span class="tag tag-support">FOUNDER</span>
+        <blockquote>"Those in power think citizens are cockroaches and parasites. But cockroaches never die. We're working on a new home right now."</blockquote>
+        <p class="name">— ABHIJEET DIPKE, CJP Founder</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── WHY IT MATTERS ── -->
+<section id="analysis" class="why-section">
+  <div class="container">
+    <p class="section-label">Analysis</p>
+    <h2 class="section-title">WHY THIS MATTERS</h2>
+
+    <p class="why-lead">
+      The CJP isn't just a meme. It's a mirror held up to a generation that inherited <span class="highlight">record unemployment, repeated exam scandals, and institutions</span> they no longer trust.
+    </p>
+
+    <div class="why-columns fade-up">
+      <div class="why-col">
+        <h3>The Youth Crisis</h3>
+        <p>India's youth unemployment hovers in double digits by conservative estimates. The 2024 NEET paper leak destroyed the aspirations of millions of students who had spent years and family savings preparing for one exam. The CJP gave this frustration a face — and a name.</p>
+      </div>
+
+      <div class="why-col">
+        <h3>Digital Dissent</h3>
+        <p>The CJP's Instagram account crossed 19 million followers in under a week — nearly double the ruling BJP. This is the first time in Indian history that a satirical online "party" outpaced real political parties in social media reach, signalling a seismic shift in how India's youth engage with politics.</p>
+      </div>
+
+      <div class="why-col">
+        <h3>The Cockroach Metaphor</h3>
+        <p>By embracing the cockroach, the movement turned a slur into a symbol of resilience. It describes itself as "Secular, Socialist, Democratic, and Lazy" — a tongue-in-cheek inversion of every political promise ever broken. The movement has since spread to West Bengal, Bihar, UP, Haryana, Jammu & Kashmir, and Himachal Pradesh.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <div>
+    <p class="logo">🪳 CJP BLOG</p>
+    <p style="margin-top:0.4rem;">A college project blog documenting India's most viral youth movement.</p>
+  </div>
+  <p>Est. May 2026 · Sources: Wikipedia, CBS News, CNN, Al Jazeera, The Quint, Business Today</p>
+</footer>
+
+<script>
+  // Intersection Observer for fade-up animations
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
